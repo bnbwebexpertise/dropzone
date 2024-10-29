@@ -731,8 +731,7 @@ export default class Dropzone extends Emitter {
 
   addFile(file) {
     file.upload = {
-      // note: this only works if window.isSecureContext is true, which includes localhost in http
-      uuid: self.crypto.randomUUID(),
+      uuid: Dropzone.uuidv4(),
       progress: 0,
       // Setting the total upload size to file.size for the beginning
       // It's actual different than the size to be transmitted.
@@ -1700,6 +1699,18 @@ export default class Dropzone extends Emitter {
     }
   }
 }
+
+static uuidv4() {
+  return self.isSecureContext ? self.crypto.randomUUID : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+    /[xy]/g,
+    function (c) {
+      let r = (Math.random() * 16) | 0,
+        v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    }
+  );
+}
+
 Dropzone.initClass();
 
 // This is a map of options for your different dropzones. Add configurations
